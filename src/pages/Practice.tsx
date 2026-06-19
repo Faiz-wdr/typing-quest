@@ -148,7 +148,7 @@ export function Practice() {
       </header>
       {/* Main timer area – switches layout based on orientation */}
       <div className={"flex-1 flex " + (isLandscape ? "flex-row items-center justify-center" : "flex-col items-center justify-center") + " -mt-20"}>
-        <AnimatePresence mode="wait">
+
 
       <div className="flex-1 flex flex-col items-center justify-center -mt-20">
         <AnimatePresence mode="wait">
@@ -240,6 +240,8 @@ export function Practice() {
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
+
       </div>
     </motion.div>
   );
