@@ -86,17 +86,17 @@ export function Practice() {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      className="p-6 pb-28 pt-12 min-h-screen flex flex-col landscape:pt-6 landscape:pb-20 md:justify-center"
+      exit={{ opacity: 0, scale: 1.05 }}
+      className="p-6 h-screen flex flex-col bg-background relative"
     >
-      <header className="flex items-center gap-4 landscape:mb-2">
+      <header className="flex items-center gap-4 pt-12">
         <Button variant="ghost" size="icon" className="rounded-full" onClick={() => navigate(-1)}>
           <ArrowLeft className="w-6 h-6" />
         </Button>
-        <h1 className="text-2xl font-bold tracking-tight">Practice Session</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Focus</h1>
       </header>
 
-      <div className="flex-1 flex flex-col landscape:flex-row md:flex-row items-center justify-center gap-12 landscape:gap-24 md:gap-24 mt-10 landscape:mt-4">
+      <div className="flex-1 flex flex-col items-center justify-center -mt-20">
         <AnimatePresence mode="wait">
           {!isCompleted ? (
             <motion.div 
@@ -104,7 +104,7 @@ export function Practice() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
-              className="flex flex-col landscape:flex-row md:flex-row items-center gap-12 landscape:gap-24 md:gap-24"
+              className="flex flex-col items-center"
             >
               <CircularProgress 
                 progress={progressPercentage} 
@@ -123,25 +123,26 @@ export function Practice() {
                 </div>
               </CircularProgress>
 
-              {/* Controls */}
-              <div className="flex flex-col sm:flex-row landscape:flex-col gap-4 w-full max-w-xs landscape:max-w-[200px]">
+              <div className="flex items-center gap-6 mt-16">
                 <Button 
-                  size="lg" 
-                  variant={isActive ? "secondary" : "default"}
-                  className={`flex-1 rounded-2xl h-16 text-lg font-bold shadow-lg ${!isActive ? 'bg-primary hover:bg-primary/90 shadow-primary/25 text-primary-foreground' : 'bg-secondary hover:bg-secondary/80 text-secondary-foreground'}`}
-                  onClick={toggleTimer}
-                >
-                  {isActive ? <Pause className="w-6 h-6 mr-2" /> : <Play className="w-6 h-6 mr-2" />}
-                  {isActive ? "Pause" : "Start"}
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="rounded-2xl h-16 w-16 md:w-auto md:px-6 shadow-sm border-2 text-foreground"
+                  variant="outline" 
+                  size="icon" 
+                  className="w-16 h-16 rounded-full bg-card shadow-sm border-0"
                   onClick={resetTimer}
                 >
-                  <RotateCcw className="w-6 h-6 md:mr-2" />
-                  <span className="hidden md:inline font-bold text-lg">Reset</span>
+                  <RotateCcw className="w-6 h-6 text-muted-foreground" />
+                </Button>
+                
+                <Button 
+                  size="icon" 
+                  className="w-20 h-20 rounded-full shadow-xl shadow-primary/25 bg-primary hover:bg-primary/90"
+                  onClick={toggleTimer}
+                >
+                  {isActive ? (
+                    <Pause className="w-8 h-8 fill-primary-foreground" />
+                  ) : (
+                    <Play className="w-8 h-8 ml-1 fill-primary-foreground" />
+                  )}
                 </Button>
               </div>
             </motion.div>
