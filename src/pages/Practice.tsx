@@ -14,14 +14,56 @@ export function Practice() {
   const [isCompleted, setIsCompleted] = useState(false);
   
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const wakeLockRef = useRef<any>(null); // Use any because WakeLockSentinel might not be in standard TS DOM lib yet
+
+  // Screen Wake Lock Logic
+  const requestWakeLock = async () => {
+    if ('wakeLock' in navigator) {
+      try {
+        wakeLockRef.current = await (navigator as any).wakeLock.request('screen');
+      } catch (err) {
+        console.warn(`Wake Lock error: ${err}`);
+      }
+    }
+  };
+
+  const releaseWakeLock = async () => {
+    if (wakeLockRef.current) {
+      try {
+        await wakeLockRef.current.release();
+        wakeLockRef.current = null;
+      } catch (err) {
+        console.warn(`Wake Lock release error: ${err}`);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && isActive) {
+        requestWakeLock();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      releaseWakeLock(); // Clean up on unmount
+    };
+  }, [isActive]);
 
   useEffect(() => {
     if (isActive && timeLeft > 0) {
+      requestWakeLock();
       timerRef.current = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
     } else if (timeLeft === 0) {
       handleComplete();
+      releaseWakeLock();
+    } else if (!isActive) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      releaseWakeLock();
     }
 
     return () => {
