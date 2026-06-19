@@ -8,6 +8,15 @@ import { CircularProgress } from '@/components/ui/circular-progress';
 const PRACTICE_TIME = 15 * 60; // 15 minutes in seconds
 
 export function Practice() {
+  // Detect orientation for responsive UI
+  const [isLandscape, setIsLandscape] = useState(window.matchMedia('(orientation: landscape)').matches);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(orientation: landscape)');
+    const handler = (e: MediaQueryListEvent) => setIsLandscape(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(PRACTICE_TIME);
   const [isActive, setIsActive] = useState(false);
@@ -137,6 +146,9 @@ export function Practice() {
         </Button>
         <h1 className="text-2xl font-bold tracking-tight">Focus</h1>
       </header>
+      {/* Main timer area – switches layout based on orientation */}
+      <div className={"flex-1 flex " + (isLandscape ? "flex-row items-center justify-center" : "flex-col items-center justify-center") + " -mt-20"}>
+        <AnimatePresence mode="wait">
 
       <div className="flex-1 flex flex-col items-center justify-center -mt-20">
         <AnimatePresence mode="wait">
@@ -150,13 +162,13 @@ export function Practice() {
             >
               <CircularProgress 
                 progress={progressPercentage} 
-                size={280} 
+                size={isLandscape ? 180 : 280} 
                 strokeWidth={16}
                 color="var(--primary)"
                 backgroundColor="var(--secondary)"
               >
                 <div className="flex flex-col items-center">
-                  <span className="text-6xl font-black tracking-tighter tabular-nums text-foreground">
+                  <span className="text-4xl md:text-6xl font-black tracking-tighter tabular-nums text-foreground">
                     {formatTime(timeLeft)}
                   </span>
                   <span className="text-sm font-medium text-muted-foreground mt-2 uppercase tracking-widest">
@@ -165,25 +177,26 @@ export function Practice() {
                 </div>
               </CircularProgress>
 
-              <div className="flex items-center gap-6 mt-16">
+              {/* Controls – switch to horizontal layout in landscape */}
+              <div className={"flex " + (isLandscape ? "flex-row" : "flex-col") + " items-center gap-6 mt-8"}>
                 <Button 
                   variant="outline" 
                   size="icon" 
-                  className="w-16 h-16 rounded-full bg-card shadow-sm border-0"
+                  className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-card shadow-sm border-0"
                   onClick={resetTimer}
                 >
-                  <RotateCcw className="w-6 h-6 text-muted-foreground" />
+                  <RotateCcw className="w-4 md:w-6 h-4 md:h-6 text-muted-foreground" />
                 </Button>
                 
                 <Button 
                   size="icon" 
-                  className="w-20 h-20 rounded-full shadow-xl shadow-primary/25 bg-primary hover:bg-primary/90"
+                  className="w-14 md:w-20 h-14 md:h-20 rounded-full shadow-xl shadow-primary/25 bg-primary hover:bg-primary/90"
                   onClick={toggleTimer}
                 >
                   {isActive ? (
-                    <Pause className="w-8 h-8 fill-primary-foreground" />
+                    <Pause className="w-5 md:w-8 h-5 md:h-8 fill-primary-foreground" />
                   ) : (
-                    <Play className="w-8 h-8 ml-1 fill-primary-foreground" />
+                    <Play className="w-5 md:w-8 h-5 md:h-8 ml-1 fill-primary-foreground" />
                   )}
                 </Button>
               </div>
