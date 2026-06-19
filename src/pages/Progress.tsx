@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { format, subDays, eachDayOfInterval } from 'date-fns';
 
 export function Progress() {
